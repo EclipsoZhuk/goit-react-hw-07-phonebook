@@ -4,9 +4,6 @@ import ContactForm from '../ContactForm';
 import ContactList from '../ContactList';
 import Filter from '../Filter';
 
-// import { connect } from 'react-redux';
-// import { AddContact } from '../../redux/phoneBook/phonebook-action';
-
 export default function App() {
     return (
         <Container>
@@ -18,16 +15,3 @@ export default function App() {
         </Container>
     );
 }
-
-// const mapStateToProps = state => {
-//     return {
-//         contacts: state.phonebook.contactsReducer,
-//         // filter: state.phonebook.filterReducer,
-//     };
-// };
-
-// const mapDispatchToProps = dispatch => ({
-//     formSubmitHandler: (name, number) => dispatch(AddContact(name, number)),
-// });
-
-// export default connect(mapStateToProps, mapDispatchToProps)(App);

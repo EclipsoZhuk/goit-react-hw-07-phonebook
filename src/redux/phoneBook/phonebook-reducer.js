@@ -1,54 +1,77 @@
-// import initialContacts from '../../contacts.json';
-// import { ADD_CONTACT, DELETE_CONTACT, FILTER_CHANGE } from './phonebook-types';
+import { createReducer, createSlice } from '@reduxjs/toolkit';
+import {
+    fetchContacts,
+    deleteContact,
+    addContact,
+} from './phonebook-operations';
+import { changeFilter } from './phonebook-action';
 
-// export const contactsReducer = (state = initialContacts, { type, payload }) => {
-//     switch (type) {
-//         case ADD_CONTACT:
-//             if (
-//                 state.find(
-//                     contact =>
-//                         contact.name.toLowerCase() ===
-//                         payload.name.toLowerCase(),
-//                 )
-//             ) {
-//                 alert(`${payload.name} is already in contacts.`);
-//             } else if (
-//                 state.find(contact => contact.number === payload.number)
-//             ) {
-//                 alert(`${payload.number} is already in contacts.`);
-//             } else if (!payload.name.trim() || !payload.number.trim()) {
-//                 alert("Enter the contact's name and number phone!");
-//             } else {
-//                 return [...state, payload];
-//             }
-//             break;
-
-//         case DELETE_CONTACT:
-//             return state.filter(({ id }) => id !== payload);
-
-//         default:
-//             return state;
-//     }
-// };
-
-// export const filterReducer = (state = '', { type, payload }) => {
-//     switch (type) {
-//         case FILTER_CHANGE:
-//             return payload;
-//         default:
-//             return state;
-//     }
-// };
-
-import initialContacts from '../../contacts.json';
-import { createReducer } from '@reduxjs/toolkit';
-import { addContact, deleteContact, changeFilter } from './phonebook-action';
-
-export const contactsReducer = createReducer(initialContacts, {
-    [addContact]: (state, { payload }) => [...state, payload],
-    [deleteContact]: (state, { payload }) =>
-        state.filter(({ id }) => id !== payload),
+const contactsSlice = createSlice({
+    name: 'contacts',
+    initialState: {
+        contactsItems: [],
+        loading: false,
+        error: null,
+    },
+    extraReducers: {
+        //
+        // Fetch
+        [fetchContacts.fulfilled]: (state, { payload }) => ({
+            ...state,
+            contactsItems: payload,
+            loading: false,
+            error: null,
+        }),
+        [fetchContacts.rejected]: (state, { payload }) => ({
+            ...state,
+            loading: false,
+            error: payload,
+        }),
+        [fetchContacts.pending]: state => ({
+            ...state,
+            loading: true,
+            error: null,
+        }),
+        //
+        // Delete
+        [deleteContact.fulfilled]: (state, { payload }) => ({
+            ...state,
+            contactsItems: state.contactsItems.filter(
+                ({ id }) => id !== payload,
+            ),
+        }),
+        [deleteContact.pending]: state => ({
+            ...state,
+            loading: false,
+            error: null,
+        }),
+        [deleteContact.rejected]: (state, { payload }) => ({
+            ...state,
+            loading: false,
+            error: payload,
+        }),
+        //
+        // Add
+        [addContact.fulfilled]: (state, { payload }) => ({
+            ...state,
+            contactsItems: [...state.contactsItems, payload],
+            loading: false,
+            error: payload,
+        }),
+        [addContact.pending]: state => ({
+            ...state,
+            loading: true,
+            error: null,
+        }),
+        [addContact.rejected]: (state, { payload }) => ({
+            ...state,
+            loading: true,
+            error: payload,
+        }),
+    },
 });
+
+export default contactsSlice.reducer;
 
 export const filterReducer = createReducer('', {
     [changeFilter]: (_, { payload }) => payload,

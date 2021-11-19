@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { phonebookAction, phonebookSelector } from '../../redux/phoneBook';
+import { phonebookSelector, phonebookOperation } from '../../redux/phoneBook';
 import s from './ContactForm.module.css';
 
 export default function ContactForm() {
@@ -36,7 +36,7 @@ export default function ContactForm() {
         } else if (!name.trim() || !number.trim()) {
             alert("Enter the contact's name and number phone!");
         } else {
-            dispatch(phonebookAction.addContact({ name, number }));
+            dispatch(phonebookOperation.addContact({ name, number }));
             setName('');
             setNumber('');
         }
